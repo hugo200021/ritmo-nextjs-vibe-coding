@@ -26,6 +26,7 @@ Las etapas siguientes describen el trabajo generado durante esta sesión. El rep
 | 4 | Prever lentitud, errores y pantallas pequeñas | `loading.tsx`, `error.tsx`, `not-found.tsx`, responsive | `fix: añadir loading UI, error UI y experiencia responsive` |
 | 5 | Preparar documentación reproducible y despliegue | `README.md`, `.env.example`, esta bitácora | `docs: registrar el flujo de Vibe Coding y el despliegue` |
 | 6 | Revisar sincronización y evitar efectos secundarios en actualizadores de React | Uso de `useSyncExternalStore` con suscripción a cambios y `localStorage` | `fix: sincronizar tareas con external store seguro para React` |
+| 7 | Comprobar utilidad de la configuración de entorno | `NEXT_PUBLIC_APP_NAME` configura el título del sitio | `chore: usar variable de entorno pública en metadatos` |
 
 ## 3. Decisiones técnicas
 

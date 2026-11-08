@@ -4,8 +4,9 @@ import "./globals.css";
 import { SiteNav } from "@/components/site-nav";
 import s from "@/components/ui.module.css";
 
+const appName = process.env.NEXT_PUBLIC_APP_NAME || "Ritmo";
 export const metadata: Metadata = {
-  title: { default: "Ritmo — Organiza tu progreso", template: "%s | Ritmo" },
+  title: { default: `${appName} — Organiza tu progreso`, template: `%s | ${appName}` },
   description: "Organiza tareas, visualiza tu progreso y recibe consejos para estudiar con enfoque.",
   icons: { icon: "/favicon.svg" },
 };

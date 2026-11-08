@@ -73,7 +73,7 @@ Contenido del archivo `.env.example`:
 NEXT_PUBLIC_APP_NAME=Ritmo
 ```
 
-La variable es **opcional y pública**, está documentada como ejemplo de configuración. La app no requiere claves de API ni credenciales. `.env.local` está incluido en `.gitignore` y no debe subirse al repositorio.
+La variable es **opcional y pública** y personaliza el título SEO de la aplicación. La app no requiere claves de API ni credenciales. `.env.local` está incluido en `.gitignore` y no debe subirse al repositorio.
 
 ## API
 
