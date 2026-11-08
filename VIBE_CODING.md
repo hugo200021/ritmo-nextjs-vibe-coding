@@ -25,6 +25,7 @@ Las etapas siguientes describen el trabajo generado durante esta sesión. El rep
 | 3 | Conectar el frontend a un Route Handler y mostrar estadísticas | API JSON, `fetch`, `useEffect`, `useState`, visualización | `feat: integrar API interna de recomendaciones y estadísticas` |
 | 4 | Prever lentitud, errores y pantallas pequeñas | `loading.tsx`, `error.tsx`, `not-found.tsx`, responsive | `fix: añadir loading UI, error UI y experiencia responsive` |
 | 5 | Preparar documentación reproducible y despliegue | `README.md`, `.env.example`, esta bitácora | `docs: registrar el flujo de Vibe Coding y el despliegue` |
+| 6 | Revisar sincronización y evitar efectos secundarios en actualizadores de React | Uso de `useSyncExternalStore` con suscripción a cambios y `localStorage` | `fix: sincronizar tareas con external store seguro para React` |
 
 ## 3. Decisiones técnicas
 
@@ -41,7 +42,7 @@ Las etapas siguientes describen el trabajo generado durante esta sesión. El rep
 
 1. **Completar la rúbrica sin depender de cuentas ni pagos.** Se optó por Route Handler interno y almacenamiento en el navegador en lugar de usar API externas o Supabase.
 2. **Combinar componentes de servidor y cliente correctamente.** Se mantuvieron `page.tsx` y `layout.tsx` como Server Components, y se usó `"use client"` solo donde hay hooks y eventos.
-3. **Evitar discrepancias de hidratación al leer localStorage.** La carga inicial se realiza dentro de `useEffect`, después del montaje del componente.
+3. **Evitar discrepancias de hidratación al leer localStorage.** El estado local se obtiene con `useSyncExternalStore`, usando una instantánea del servidor estable durante la hidratación y leyendo `localStorage` solo en el cliente.
 4. **Prever errores de API y estados intermedios.** El widget usa `loading`, `error`, `AbortController` y reintento; existen además límites de error/carga a nivel de App Router.
 5. **Separar requisitos de despliegue de requisitos de construcción.** El código no incorpora una URL ficticia; la URL de Vercel se añade únicamente cuando existe un despliegue público real.
 

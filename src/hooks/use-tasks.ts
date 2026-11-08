@@ -1,48 +1,63 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 import { Category, Priority, STORAGE_KEY, Task, initialTasks, validTask } from "@/lib/tasks";
+
 const EVENT_NAME = "ritmo:tasks-changed";
-function load(): Task[] {
+const EMPTY_TASKS: Task[] = [];
+let cachedTasks: Task[] | null = null;
+
+function readStorage(): Task[] {
   try {
     const saved = window.localStorage.getItem(STORAGE_KEY);
     if (saved !== null) {
       const parsed: unknown = JSON.parse(saved);
-      if (Array.isArray(parsed)) return parsed.filter(validTask);
+      return Array.isArray(parsed) ? parsed.filter(validTask) : [];
     }
     const demo = initialTasks();
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(demo));
     return demo;
-  } catch { return []; }
+  } catch { return EMPTY_TASKS; }
 }
-function persist(next: Task[]) {
-  try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch { /* El almacenamiento puede estar deshabilitado. */ }
+function getSnapshot(): Task[] {
+  if (cachedTasks === null) cachedTasks = readStorage();
+  return cachedTasks;
+}
+function getServerSnapshot(): Task[] { return EMPTY_TASKS; }
+function subscribe(notify: () => void): () => void {
+  const onSameTabChange = () => notify();
+  const onStorageChange = (event: StorageEvent) => {
+    if (event.key === STORAGE_KEY || event.key === null) {
+      cachedTasks = readStorage();
+      notify();
+    }
+  };
+  window.addEventListener(EVENT_NAME, onSameTabChange);
+  window.addEventListener("storage", onStorageChange);
+  return () => {
+    window.removeEventListener(EVENT_NAME, onSameTabChange);
+    window.removeEventListener("storage", onStorageChange);
+  };
+}
+function noopSubscribe(): () => void { return () => {}; }
+function isClient(): boolean { return true; }
+function isServer(): boolean { return false; }
+function mutate(fn: (prev: Task[]) => Task[]) {
+  // React external-store snapshots are immutable; persist outside of render/updater functions.
+  cachedTasks = fn(getSnapshot());
+  try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(cachedTasks)); }
+  catch { /* Privacidad del navegador puede impedir persistir; la UI sigue funcionando. */ }
   window.dispatchEvent(new Event(EVENT_NAME));
 }
 export function useTasks() {
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [ready, setReady] = useState(false);
-  useEffect(() => {
-    const sync = () => setTasks(load());
-    sync();
-    setReady(true);
-    window.addEventListener("storage", sync);
-    window.addEventListener(EVENT_NAME, sync);
-    return () => { window.removeEventListener("storage", sync); window.removeEventListener(EVENT_NAME, sync); };
-  }, []);
-  const update = useCallback((fn: (prev: Task[]) => Task[]) => {
-    setTasks((prev) => {
-      const next = fn(prev);
-      persist(next);
-      return next;
-    });
-  }, []);
+  const tasks = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const ready = useSyncExternalStore(noopSubscribe, isClient, isServer);
   const add = useCallback((title: string, category: Category, priority: Priority) => {
-    const cleaned = title.trim().slice(0,120);
-    if (!cleaned) return false;
-    update((prev) => [{ id: crypto.randomUUID(), title: cleaned, category, priority, completed: false, createdAt: new Date().toISOString() }, ...prev]);
+    const cleaned = title.trim().slice(0, 120);
+    if (cleaned.length < 2) return false;
+    mutate((prev) => [{ id: crypto.randomUUID(), title: cleaned, category, priority, completed: false, createdAt: new Date().toISOString() }, ...prev]);
     return true;
-  }, [update]);
-  const toggle = useCallback((id: string) => update((prev) => prev.map((t) => t.id === id ? { ...t, completed: !t.completed } : t)), [update]);
-  const remove = useCallback((id: string) => update((prev) => prev.filter((t) => t.id !== id)), [update]);
+  }, []);
+  const toggle = useCallback((id: string) => mutate((prev) => prev.map((t) => t.id === id ? { ...t, completed: !t.completed } : t)), []);
+  const remove = useCallback((id: string) => mutate((prev) => prev.filter((t) => t.id !== id)), []);
   return { tasks, ready, add, toggle, remove };
 }
