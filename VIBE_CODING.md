@@ -71,3 +71,18 @@ Antes de entregar, comprobar y marcar según evidencia real:
 ## 6. Qué aportó la IA y qué debe controlar el estudiante
 
 La IA propuso la arquitectura y generó los archivos y commits iniciales; el estudiante decide qué se publica, revisa requisitos, ejecuta las pruebas, corrige cualquier fallo que aparezca y despliega el repositorio. Esta división de responsabilidades es la esencia del Vibe Coding guiado.
+
+
+## 7. Corrección durante la compilación y despliegue final
+
+Durante la validación del proyecto se ejecutaron los comandos `npm run typecheck`, `npm run lint` y `npm run build`.
+
+Las verificaciones de TypeScript y ESLint finalizaron correctamente. La primera compilación de producción detectó un error de CSS Modules debido al uso del selector universal `*` en `src/components/ui.module.css`.
+
+Con apoyo de ChatGPT se identificó la causa y se trasladó la regla global de accesibilidad a `src/app/globals.css`, eliminándola del módulo CSS.
+
+Tras la corrección, `npm run build` finalizó correctamente. Se registró un nuevo commit y se sincronizó con GitHub, permitiendo que Vercel completara el despliegue de producción.
+
+**Resultado:** aplicación publicada en:
+
+https://ritmo-nextjs-vibe-coding-one.vercel.app/

@@ -2,7 +2,11 @@
 
 Aplicación web de productividad creada como práctica evaluada de **Vibe Coding**. Permite registrar, completar, buscar y eliminar tareas; consultar estadísticas; y recibir una recomendación mediante una **API interna** desarrollada con Route Handlers de Next.js.
 
-> **URL de producción:** `PENDIENTE: pegar aquí el dominio generado por Vercel tras el despliegue`. No se declara un despliegue que todavía no se ha realizado.
+
+> **URL de producción:** https://ritmo-nextjs-vibe-coding-one.vercel.app/
+
+**Estado:** Desplegado correctamente en producción mediante Vercel Hobby.
+
 
 ## Funcionalidades
 
