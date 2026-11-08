@@ -1,0 +1,22 @@
+ACTIVIDAD EVALUADA - NEXT.JS VIBE CODING
+Proyecto: Ritmo - Organizador de tareas
+Fecha: 8 de noviembre de 2026
+
+PENDIENTE COMPLETAR DESPUES DE PUBLICAR:
+Repositorio GitHub: https://github.com/TU_USUARIO/ritmo-nextjs-vibe-coding
+URL publica Vercel: https://TU_APP.vercel.app
+
+Rutas:
+/ (Inicio)
+/tareas
+/estadisticas
+/guia
+/api/recomendacion?prioridad=alta
+
+Requisitos: Next.js 16, App Router, TypeScript, CSS Modules,
+Server + Client Components, useState, useEffect, API interna,
+loading.tsx, error.tsx, responsive, .env.example,
+README.md, VIBE_CODING.md e historial de commits.
+
+NO PEGAR EN EL AULA ESTOS ENLACES CON MARCADORES: sustituirlos por los reales.
+El despliegue debe realizarse y comprobarse antes de entregar.
